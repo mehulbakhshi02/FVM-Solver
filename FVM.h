@@ -30,13 +30,12 @@ private:
     double Sp=0.0;
 
     #define Dirichlet_E
-    double phi_e=1.0;
+    double phi_e=0.0;
     #define Dirichlet_W
-    double phi_w=0.0;
-    #define Neumann_N
-    double dphi_n=0.0;
-    #define Neumann_S
-    double dphi_s=0.0;
+    double phi_w=1.0;
+    
+
+    #define No_Convection
 
 //----------------------------------------------------------------------------------------------------------
 
@@ -45,6 +44,12 @@ private:
     double dx = xL/nx;
     double dy = yL/ny;
     double error_req;
+
+    #define Neumann_N
+    double dphi_n=0.0;
+    #define Neumann_S
+    double dphi_s=0.0;
+
     Eigen::MatrixXd phi;
     Eigen::MatrixXd phi_old;
     Eigen::MatrixXd A_P;
@@ -77,9 +82,6 @@ private:
     double k=1.0;
     double Su=1.0;
     double Sp=1.0;
-    double rho=1.0;
-    double u=0.0;
-    double v=0.0;
 
     //boundary conditions
     #define Dirichlet_E
@@ -87,19 +89,11 @@ private:
     #define Dirichlet_W
     double phi_w=0.0;
     #define Dirichlet_N
-    double phi_n=0.0;
+    double phi_n=1.0;
     #define Dirichlet_S
     double phi_s=0.0;
 
-    //Convection boundary conditions
-    int in_w=0;
-    int out_w=0;
-    int in_e=0;
-    int out_e=0;
-    int in_n=0;
-    int out_n=0;
-    int in_s=0;
-    int out_s=0;
+    #define No_Convection
 
 //-------------------------------------------------------------------------------------------------------
 
@@ -153,14 +147,10 @@ private:
     double phi_s=0.0;
 
     //Convection boundary conditions
-    int in_w=1;
-    int out_w=0;
-    int in_e=0;
-    int out_e=1;
-    int in_n=1;
-    int out_n=0;
-    int in_s=0;
-    int out_s=1;
+    #define Inlet_W
+    #define Inlet_N
+    #define Outlet_E
+    #define Outlet_S
 
 //-------------------------------------------------------------------------------------------------------
 
@@ -229,6 +219,60 @@ double phi_n = 0.0;
 int dir_s = 0;
 int neu_s = 1;
 double phi_s = 0.0;
+#endif
+
+#if defined No_Convection
+double rho=0.0;
+double u=0.0;
+double v=0.0;
+int in_w=0;
+int out_w=0;
+int in_e=0;
+int out_e=0;
+int in_n=0;
+int out_n=0;
+int in_s=0;
+int out_s=0;
+#endif
+
+#if defined Inlet_E
+int in_e=1;
+int out_e=0;
+#endif
+
+#if defined Inlet_W
+int in_w=1;
+int out_w=0;
+#endif
+
+#if defined Inlet_N
+int in_n=1;
+int out_n=0;
+#endif
+
+#if defined Inlet_S
+int in_s=1;
+int out_s=0;
+#endif
+
+#if defined Outlet_E
+int in_e=0;
+int out_e=1;
+#endif
+
+#if defined Outlet_W
+int in_w=0;
+int out_w=1;
+#endif
+
+#if defined Outlet_N
+int in_n=0;
+int out_n=1;
+#endif
+
+#if defined Outlet_S
+int in_s=0;
+int out_s=1;
 #endif
 
 #endif
