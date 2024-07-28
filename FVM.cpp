@@ -19,7 +19,7 @@ void FVM::initialize() {
     A_W = Eigen::MatrixXd::Constant(ny, nx, k*dy/dx+(rho*u*dy)/2);
     A_N = Eigen::MatrixXd::Constant(ny, nx, k*dx/dy-(rho*v*dx)/2);
     A_S = Eigen::MatrixXd::Constant(ny, nx, k*dx/dy+(rho*v*dx)/2);
-    b = Eigen::MatrixXd::Zero(ny, nx);
+    b = Eigen::MatrixXd::Constant(ny, nx, Su);
 
     A_E.col(nx-1).setZero();
     A_W.col(0).setZero();
@@ -40,15 +40,15 @@ void FVM::solve() {
         col = 0;
         for (row = 0; row < ny; row++)
         {
-            b(row,col) += dir_w*(phi_w*2*k*dy/dx)+neu_w*(k*dphi_w*dy)+in_w*(-phi_w*rho*u*dy);
-                A_P(row,col) += dir_w*(2*dy/dx*k);      
+            b(row,col) += dir_w*(phi_w*2*k*dy/dx)+neu_w*(k*dphi_w*dy)+in_w*(phi_w*rho*u*dy);
+                A_P(row,col) += dir_w*(2*dy/dx*k)+in_w*(rho*u*dy);      
         }
         // East boundary
         col = nx-1;
         for (row = 0; row < ny; row++)
         {
             b(row,col) += dir_e*(phi_e*2*k*dy/dx)+neu_e*(k*dphi_e*dy)+in_e*(-phi_e*rho*u*dy);
-                A_P(row,col) += dir_e*(2*dy/dx*k);
+                A_P(row,col) += dir_e*(2*dy/dx*k)+in_e*(-rho*u*dy);
         }
 
         // North boundary
@@ -56,15 +56,15 @@ void FVM::solve() {
         for (col = 0; col < nx; col++)
         {
             b(row,col) += dir_n*(phi_n*2*k*dx/dy)+neu_n*(k*dphi_n*dx)+in_n*(-phi_n*rho*v*dx);
-                A_P(row,col) += dir_n*(2*dx/dy*k);
+                A_P(row,col) += dir_n*(2*dx/dy*k)+in_n*(-rho*v*dx);
         }
 
         // South boundary
         row = 0;
         for (col = 0; col < nx; col++)
         {
-            b(row,col) += dir_s*(phi_s*2*k*dx/dy)+neu_s*(k*dphi_s*dx)+in_s*(-phi_s*rho*v*dx);
-            A_P(row,col) += dir_s*(2*dx/dy*k);
+            b(row,col) += dir_s*(phi_s*2*k*dx/dy)+neu_s*(k*dphi_s*dx)+in_s*(phi_s*rho*v*dx);
+            A_P(row,col) += dir_s*(2*dx/dy*k)+in_s*(rho*v*dx);
         }
 
     while (error_mag > error_req) {
@@ -91,23 +91,6 @@ void FVM::solve() {
                 phi(row, col) = (E + W + N + S + b(row, col)) / A_P(row, col);    
                     
             }     
-        }
-        //Convection Outlet Boundary Implementation
-        col = 0;
-        for (row = 0; row < ny; row++){
-            A_P(row,col) += out_w*(-phi(row, 1));
-        }
-        col = nx-1;
-        for (row = 0; row < ny; row++){
-        A_P(row, col) += out_e*(-phi(row, nx-2));
-        }
-        row = ny-1;
-        for (col = 0; col < nx; col++){
-            A_P(row,col) += out_n*(-phi(ny-2, col));
-        }
-        row = 0;
-        for (col = 0; col < nx; col++){
-            A_P(row, col) += out_s*(-phi(1, col));
         }
 
         error_mag = compute_error();

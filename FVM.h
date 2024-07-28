@@ -9,9 +9,9 @@
 using namespace std;
 
 
-//#define HeatDiff1D
+#define HeatDiff1D
 //#define HeatDiff2D
-#define HeatConv2D
+//#define HeatConv2D
 
 #if defined HeatDiff1D
 
@@ -32,7 +32,7 @@ private:
     #define Dirichlet_E
     double phi_e=0.0;
     #define Dirichlet_W
-    double phi_w=1.0;
+    double phi_w=100.0;
     
 
     #define No_Convection
@@ -80,14 +80,14 @@ private:
     double xL=1.0;
     double yL=1.0;
     double k=1.0;
-    double Su=1.0;
-    double Sp=1.0;
+    double Su=0.0;
+    double Sp=0.0;
 
     //boundary conditions
     #define Dirichlet_E
-    double phi_e=1.0;
+    double phi_e=0.0;
     #define Dirichlet_W
-    double phi_w=0.0;
+    double phi_w=1.0;
     #define Dirichlet_N
     double phi_n=1.0;
     #define Dirichlet_S
@@ -133,24 +133,24 @@ private:
     double Su=0.0;
     double Sp=0.0;
     double rho=1.0;
-    double u=10.0;
-    double v=10.0;
+    double u=1.0;
+    double v=1.0;
 
     //Diffusion boundary conditions
     #define Dirichlet_E
     double phi_e=0.0;
     #define Dirichlet_W
-    double phi_w=1.0;
-    #define Dirichlet_N
-    double phi_n=1.0;
-    #define Dirichlet_S
-    double phi_s=0.0;
+    double phi_w=0.0;
+    #define Neumann_N
+    double dphi_n=0.0;
+    #define Neumann_S
+    double dphi_s=0.0;
 
     //Convection boundary conditions
     #define Inlet_W
-    #define Inlet_N
+    #define Outlet_N
     #define Outlet_E
-    #define Outlet_S
+    #define Inlet_S
 
 //-------------------------------------------------------------------------------------------------------
 
