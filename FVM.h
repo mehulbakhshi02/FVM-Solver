@@ -6,12 +6,14 @@
 #include <cmath>
 #include <fstream>
 #include "Eigen/Dense"
+#include <functional>
 using namespace std;
 
 
-#define HeatDiff1D
+//#define HeatDiff1D
 //#define HeatDiff2D
 //#define HeatConv2D
+#define MMSVerification
 
 #if defined HeatDiff1D
 
@@ -133,6 +135,63 @@ private:
     double Su=0.0;
     double Sp=0.0;
     double rho=1.0;
+    double u=10.0;
+    double v=-10.0;
+
+    //Diffusion boundary conditions
+    #define Dirichlet_E
+    double phi_e=0.0;
+    #define Dirichlet_W
+    double phi_w=1.0;
+    #define Dirichlet_N
+    double phi_n=1.0;
+    #define Dirichlet_S
+    double phi_s=0.0;
+
+    //Convection boundary conditions
+    #define Inlet_W
+    #define Inlet_N
+    #define Outlet_E
+    #define Outlet_S
+
+//-------------------------------------------------------------------------------------------------------
+
+    double error_req;
+    double dx = xL/nx;
+    double dy = yL/ny;
+    Eigen::MatrixXd phi;
+    Eigen::MatrixXd phi_old;
+    Eigen::MatrixXd A_P;
+    Eigen::MatrixXd A_E;
+    Eigen::MatrixXd A_W;
+    Eigen::MatrixXd A_N;
+    Eigen::MatrixXd A_S;
+    Eigen::MatrixXd b;
+
+    void initialize();
+    double compute_error();
+    };
+
+#endif
+
+#if defined MMSVerification
+
+class FVM {
+public:
+    FVM(double error_req);
+    void solve();
+    void write_csv(string filename);
+
+private:
+//-------------------------------------------------User Defined Parameters--------------------------------
+    int nx=100;
+    int ny=100;
+    double xL=1.0;
+    double yL=1.0;
+    double k=1.0;
+    double Su=0.0;
+    double Sp=0.0;
+    double rho=1.0;
     double u=1.0;
     double v=1.0;
 
@@ -168,11 +227,14 @@ private:
 
     void initialize();
     double compute_error();
+    void verify();
+    double phifunction(double x, double y);
+    double gaussQuad(function<double(double, double)> func, double llim_x, double ulim_x, double llim_y, double ulim_y);
     };
 
 #endif
 
-//Dirichlet and Neumann BC
+//Boundary Condition Definition
 #if defined Dirichlet_E
 int dir_e = 1;
 int neu_e = 0;

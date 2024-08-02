@@ -6,6 +6,12 @@
 #include "Eigen/Dense"
 using namespace std;
 
+#ifdef MMSVerification
+#include "GuassQuad.cpp"
+#endif
+
+#ifndef MMSVerification
+
 FVM::FVM(double error_req)
     : error_req(error_req) {
     initialize();
@@ -19,7 +25,7 @@ void FVM::initialize() {
     A_W = Eigen::MatrixXd::Constant(ny, nx, k*dy/dx+(rho*u*dy)/2);
     A_N = Eigen::MatrixXd::Constant(ny, nx, k*dx/dy-(rho*v*dx)/2);
     A_S = Eigen::MatrixXd::Constant(ny, nx, k*dx/dy+(rho*v*dx)/2);
-    b = Eigen::MatrixXd::Constant(ny, nx, Su);
+    b = Eigen::MatrixXd::Zero(ny, nx);
 
     A_E.col(nx-1).setZero();
     A_W.col(0).setZero();
@@ -29,6 +35,9 @@ void FVM::initialize() {
 
 }
 
+#endif
+
+/// @brief 
 void FVM::solve() {
     int row, col;
     double error_mag = 1.0;
