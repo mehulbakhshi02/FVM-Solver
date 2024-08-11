@@ -12,8 +12,8 @@ using namespace std;
 
 //#define HeatDiff1D
 //#define HeatDiff2D
-//#define HeatConv2D
-#define MMSVerification
+#define HeatConv2D
+//#define MMSVerification
 
 #if defined HeatDiff1D
 
@@ -184,8 +184,8 @@ public:
 
 private:
 //-------------------------------------------------User Defined Parameters--------------------------------
-    int nx=100;
-    int ny=100;
+    int nx=10;
+    int ny=10;
     double xL=1.0;
     double yL=1.0;
     double k=1.0;
@@ -230,6 +230,7 @@ private:
     void verify();
     double phifunction(double x, double y);
     double gaussQuad(function<double(double, double)> func, double llim_x, double ulim_x, double llim_y, double ulim_y);
+    double L2norm();
     };
 
 #endif

@@ -72,3 +72,27 @@ void FVM::verify(){
             }
     }
 }
+
+double FVM::L2norm(){
+    int row, col;
+    double L2norm =0.0;
+
+    for (row = 0; row < ny; row++) {
+        for (col = 0; col < nx; col++) {
+            double llim_x = col * dx;
+            double ulim_x = (col + 1) * dx;
+            double llim_y = row * dy;
+            double ulim_y = (row + 1) * dy;
+
+            auto error = [this, row, col](double x, double y) {
+                return pow((sin(M_PI*x)*cos(M_PI*y) - phi(row, col)),2.0);
+            };
+            double integral = gaussQuad(error, llim_x, ulim_x, llim_y, ulim_y);
+            double elementL2norm = sqrt(integral);
+            L2norm += elementL2norm;
+            // L2norm +=integral;
+        }
+    }
+    //L2norm = sqrt(L2norm);
+    return L2norm;
+}

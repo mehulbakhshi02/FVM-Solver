@@ -108,6 +108,10 @@ void FVM::solve() {
     }  
 
     std::cout << "Iterations: " << iterations << std::endl;
+    #ifdef MMSVerification
+    double norm = L2norm();
+    cout << "The L2 norm is " << norm << endl;
+    #endif
 }
 
 double FVM::compute_error() {
