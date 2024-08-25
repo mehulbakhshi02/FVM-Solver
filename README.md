@@ -2,6 +2,9 @@ Finite volume based 1D and 2D steady state solver. The code has convection-diffu
 
 Plots of some results:
 
+![image](https://github.com/user-attachments/assets/a5b383b3-ffde-44a5-928a-b34ea0197fc7)
+Conduction through 1D domain.
+
 ![image](https://github.com/user-attachments/assets/dc9bf286-2358-43a1-b191-38bb2a2548ea)
 Diffusion in 2D domain.
 
